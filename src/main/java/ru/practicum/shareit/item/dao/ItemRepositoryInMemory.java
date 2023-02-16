@@ -2,9 +2,7 @@ package ru.practicum.shareit.item.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.notFound.ItemNotFoundException;
-import ru.practicum.shareit.exception.notFound.NotFoundException;
 import ru.practicum.shareit.exception.operationAccess.ItemOperationAccessException;
-import ru.practicum.shareit.exception.operationAccess.OperationAccessException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
