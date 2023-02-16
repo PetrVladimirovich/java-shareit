@@ -1,15 +1,17 @@
 package ru.practicum.shareit.request.dao;
 
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ItemRequestDao {
+@Repository
+public interface ItemRequestRepository {
 
-    List<ItemRequest> findAllItemRequests();
+    List<ItemRequest> getAllItemRequests();
 
-    Optional<ItemRequest> findItemRequestById(Long itemRequestId);
+    Optional<ItemRequest> getItemRequestById(Long itemRequestId);
 
     ItemRequest createItemRequest(ItemRequest itemRequest);
 

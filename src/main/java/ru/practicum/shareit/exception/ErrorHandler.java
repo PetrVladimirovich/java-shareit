@@ -6,6 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.exception.alreadyExists.AlreadyExistsException;
+import ru.practicum.shareit.exception.notFound.NotFoundException;
+import ru.practicum.shareit.exception.operationAccess.OperationAccessException;
 
 @RestControllerAdvice
 @Slf4j

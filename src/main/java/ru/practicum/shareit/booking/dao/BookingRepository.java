@@ -1,15 +1,17 @@
 package ru.practicum.shareit.booking.dao;
 
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BookingDao {
+@Repository
+public interface BookingRepository {
 
-    List<Booking> findAllBookings();
+    List<Booking> getAllBookings();
 
-    Optional<Booking> findBookingById(Long bookingId);
+    Optional<Booking> getBookingById(Long bookingId);
 
     Booking createBooking(Booking booking);
 

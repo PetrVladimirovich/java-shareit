@@ -6,17 +6,17 @@ import ru.practicum.shareit.booking.model.Booking;
 import java.util.*;
 
 @Repository
-public class BookingDaoInMemory implements BookingDao {
+public class BookingRepositoryInMemory implements BookingRepository {
     private final Map<Long, Booking> bookings = new HashMap<>();
     private Long nextId = 1L;
 
     @Override
-    public List<Booking> findAllBookings() {
+    public List<Booking> getAllBookings() {
         return new ArrayList<>(bookings.values());
     }
 
     @Override
-    public Optional<Booking> findBookingById(Long bookingId) {
+    public Optional<Booking> getBookingById(Long bookingId) {
         return Optional.of(bookings.get(bookingId));
     }
 

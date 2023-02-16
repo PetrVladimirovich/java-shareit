@@ -6,17 +6,17 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import java.util.*;
 
 @Repository
-public class ItemRequestDaoInMemory implements ItemRequestDao {
+public class ItemRequestRepositoryInMemory implements ItemRequestRepository {
     private final Map<Long, ItemRequest> itemRequests = new HashMap<>();
     private Long nextId = 1L;
 
     @Override
-    public List<ItemRequest> findAllItemRequests() {
+    public List<ItemRequest> getAllItemRequests() {
         return new ArrayList<>(itemRequests.values());
     }
 
     @Override
-    public Optional<ItemRequest> findItemRequestById(Long itemRequestId) {
+    public Optional<ItemRequest> getItemRequestById(Long itemRequestId) {
         return Optional.of(itemRequests.get(itemRequestId));
     }
 

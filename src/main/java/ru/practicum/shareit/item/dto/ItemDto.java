@@ -12,11 +12,11 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class ItemDto {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "the 'name' field cannot be empty")
     private String name;
-    @NotBlank
+    @NotBlank(message = "the 'description' field cannot be empty")
     private String description;
-    @NotNull
+    @NotNull(message = "the 'available' field is required")
     private Boolean available;
     private Long request;
 }

@@ -6,24 +6,24 @@ import ru.practicum.shareit.user.model.User;
 import java.util.*;
 
 @Repository
-public class UserDaoInMemory implements UserDao {
+public class UserRepositoryInMemory implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
     private Long nextId = 1L;
 
     @Override
-    public List<User> findAllUsers() {
+    public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
     }
 
     @Override
-    public Optional<User> findUserById(Long userId) {
+    public Optional<User> getUserById(Long userId) {
         return users.values().stream()
                 .filter(user -> userId.equals(user.getId()))
                 .findFirst();
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return users.values().stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst();

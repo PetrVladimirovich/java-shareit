@@ -21,34 +21,37 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> findAllUsers() {
-        log.debug("UserController: выпонлено findAllUsers.");
-        return UserMapper.toUserDtoList(userService.findAllUsers());
+    public List<UserDto> getAllUsers() {
+        log.debug("UserController: done getAllUsers.");
+        return UserMapper.toUserDtoList(userService.getAllUsers());
     }
 
     @GetMapping("/{userId}")
-    public UserDto findUserById(@PathVariable Long userId) {
-        log.debug("UserController: выпонлено findUserById - {}.", userId);
-        return UserMapper.toUserDto(userService.findUserById(userId));
+    public UserDto getUserById(@PathVariable Long userId) {
+        log.debug("UserController: done getUserById - {}.", userId);
+        return UserMapper.toUserDto(userService.getUserById(userId));
     }
 
     @PostMapping
     public UserDto createUser(@Validated(Create.class) @RequestBody UserDto userDto) {
-        log.debug("UserController: выпонлено createUser - {}.", userDto);
+        log.debug("UserController: done createUser - {}.", userDto);
         User user = UserMapper.toUser(userDto);
         return UserMapper.toUserDto(userService.createUser(user));
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable Long userId, @Validated(Update.class) @RequestBody UserDto userDto) {
-        log.debug("UserController: выпонлено updateUser - {}.", userDto);
+    public UserDto updateUser(
+            @PathVariable Long userId,
+            @Validated(Update.class) @RequestBody UserDto userDto
+    ) {
+        log.debug("UserController: done updateUser - {}.", userDto);
         User user = UserMapper.toUser(userDto);
         return UserMapper.toUserDto(userService.updateUser(userId, user));
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable Long userId) {
-        log.debug("UserController: выпонлено deleteUserById - {}.", userId);
+        log.debug("UserController: done deleteUserById - {}.", userId);
         userService.deleteUserById(userId);
     }
 }

@@ -3,10 +3,11 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.AlreadyExistsException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.alreadyExists.UserAlreadyExistsByEmailException;
+import ru.practicum.shareit.exception.alreadyExists.UserAlreadyExistsException;
+import ru.practicum.shareit.exception.notFound.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.dao.UserDao;
+import ru.practicum.shareit.user.dao.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,45 +16,46 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-    private final UserDao userRep;
+    private final UserRepository userRep;
 
     @Override
-    public List<User> findAllUsers() {
-        log.debug("UserService: выполнено findAllUsers.");
-        return userRep.findAllUsers();
+    public List<User> getAllUsers() {
+        log.debug("UserService: done getAllUsers.");
+        return userRep.getAllUsers();
     }
 
     @Override
-    public User findUserById(Long id) {
-        User user = userRep.findUserById(id).orElseThrow(
-                () -> new NotFoundException(User.class.toString(), id)
-        );
-        log.debug("UserService: выполнено findUserById - {}.", user);
+    public User getUserById(Long id) {
+        User user = userRep.getUserById(id)
+                        .orElseThrow(() -> new UserNotFoundException(id));
+        log.debug("UserService: done getUserById - {}.", user);
         return user;
     }
 
     @Override
     public User createUser(User user) {
         if (user.getId() != null && userRep.userExists(user.getId())) {
-            throw new AlreadyExistsException(User.class.toString(), user.getId());
+            throw new UserAlreadyExistsException(user.getId());
         }
-        if (userRep.findAllUsers().contains(user)) {
-            throw new AlreadyExistsException(User.class.toString(), user.getEmail());
+        if (userRep.getAllUsers().contains(user)) {
+            throw new UserAlreadyExistsByEmailException(user.getEmail());
         }
         user = userRep.createUser(user);
-        log.debug("UserService: выполнено createUser - {}.", user);
+        log.debug("UserService: done createUser - {}.", user);
         return user;
     }
 
     @Override
     public User updateUser(Long userId, User user) {
         if (!userRep.userExists(userId)) {
-            throw new NotFoundException(User.class.toString(), userId);
+            throw new UserNotFoundException(userId);
         }
-        User oldUser = findUserById(userId);
-        Optional<User> emailUser = userRep.findUserByEmail(user.getEmail());
+
+        User oldUser = getUserById(userId);
+        Optional<User> emailUser = userRep.getUserByEmail(user.getEmail());
+
         if (emailUser.isPresent() && !emailUser.get().getId().equals(userId)) {
-            throw new AlreadyExistsException(User.class.toString(), user.getEmail());
+            throw new UserAlreadyExistsByEmailException(user.getEmail());
         }
         if (user.getName() != null) {
             oldUser.setName(user.getName());
@@ -61,16 +63,16 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() != null) {
             oldUser.setEmail(user.getEmail());
         }
-        log.debug("UserService: выполнено updateUser - {}.", user);
+        log.debug("UserService: done updateUser - {}.", user);
         return userRep.updateUser(userId, oldUser);
     }
 
     @Override
     public void deleteUserById(Long userId) {
         if (!userRep.userExists(userId)) {
-            throw new NotFoundException(User.class.toString(), userId);
+            throw new UserNotFoundException(userId);
         }
         userRep.deleteUserById(userId);
-        log.debug("UserService: выполнено deleteUserById - ID {}.", userId);
+        log.debug("UserService: done deleteUserById - ID {}.", userId);
     }
 }

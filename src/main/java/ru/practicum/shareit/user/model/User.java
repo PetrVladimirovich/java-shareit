@@ -11,7 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class User {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "the 'email' field cannot be empty")
     @Email
     private String email;
     private String name;

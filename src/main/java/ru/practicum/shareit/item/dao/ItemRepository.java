@@ -1,17 +1,19 @@
 package ru.practicum.shareit.item.dao;
 
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ItemDao {
+@Repository
+public interface ItemRepository {
 
-    List<Item> findAllItems(Long userId);
+    List<Item> getAllItems(Long userId);
 
-    Optional<Item> findItemById(Long itemId);
+    Optional<Item> getItemById(Long itemId);
 
-    List<Item> findItemsByText(String text);
+    List<Item> getItemsByText(String text);
 
     Item createItem(Long userId, Item item);
 

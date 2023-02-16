@@ -13,9 +13,9 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class UserDto {
     private Long id;
-    @NotNull(groups = {Create.class})
+    @NotNull(message = "the 'email' field is required", groups = {Create.class})
     @Email(groups = {Create.class, Update.class})
     private String email;
-    @NotBlank(groups = {Create.class})
+    @NotBlank(message = "the 'name' field cannot be empty", groups = {Create.class})
     private String name;
 }

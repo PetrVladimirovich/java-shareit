@@ -1,14 +1,16 @@
 package ru.practicum.shareit.user.service;
 
+import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
+@Service
 public interface UserService {
 
-    List<User> findAllUsers();
+    List<User> getAllUsers();
 
-    User findUserById(Long id);
+    User getUserById(Long id);
 
     User createUser(User user);
 

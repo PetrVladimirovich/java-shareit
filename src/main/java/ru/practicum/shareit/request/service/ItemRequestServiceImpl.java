@@ -3,10 +3,11 @@ package ru.practicum.shareit.request.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.AlreadyExistsException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.alreadyExists.AlreadyExistsException;
+import ru.practicum.shareit.exception.notFound.ItemNotFoundException;
+import ru.practicum.shareit.exception.notFound.NotFoundException;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.dao.ItemRequestDao;
+import ru.practicum.shareit.request.dao.ItemRequestRepository;
 
 import java.util.List;
 
@@ -14,48 +15,48 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ItemRequestServiceImpl implements ItemRequestService {
-    private final ItemRequestDao itemRequestRep;
+    private final ItemRequestRepository itemRequestRep;
 
     @Override
-    public List<ItemRequest> findAllItemRequests() {
-        log.debug("RequestService: выполнено findAllItemRequests.");
-        return itemRequestRep.findAllItemRequests();
+    public List<ItemRequest> getAllItemRequests() {
+        log.debug("RequestService: done getAllItemRequests.");
+        return itemRequestRep.getAllItemRequests();
     }
 
     @Override
-    public ItemRequest findItemRequestById(Long itemRequestId) {
-        ItemRequest itemRequest = itemRequestRep.findItemRequestById(itemRequestId).orElseThrow(
-                () -> new NotFoundException(ItemRequest.class.toString(), itemRequestId)
+    public ItemRequest getItemRequestById(Long itemRequestId) {
+        ItemRequest itemRequest = itemRequestRep.getItemRequestById(itemRequestId).orElseThrow(
+                () -> new ItemNotFoundException(itemRequestId)
         );
-        log.debug("RequestService: выполнено findItemRequestById - {}.", itemRequest);
+        log.debug("RequestService: done getItemRequestById - {}.", itemRequest);
         return itemRequest;
     }
 
     @Override
     public ItemRequest createItemRequest(ItemRequest itemRequest) {
         if (itemRequest.getId() != null && itemRequestRep.itemRequestExists(itemRequest.getId())) {
-            throw new AlreadyExistsException(ItemRequest.class.toString(), itemRequest.getId());
+            throw new ItemNotFoundException(itemRequest.getId());
         }
         itemRequest = itemRequestRep.createItemRequest(itemRequest);
-        log.debug("RequestService: выполнено createItemRequest - {}.", itemRequest);
+        log.debug("RequestService: done createItemRequest - {}.", itemRequest);
         return itemRequest;
     }
 
     @Override
     public ItemRequest updateItemRequest(ItemRequest itemRequest) {
         if (!itemRequestRep.itemRequestExists(itemRequest.getId())) {
-            throw new NotFoundException(ItemRequest.class.toString(), itemRequest.getId());
+            throw new ItemNotFoundException(itemRequest.getId());
         }
-        log.debug("RequestService: выполнено updateItemRequest - {}.", itemRequest);
+        log.debug("RequestService: done updateItemRequest - {}.", itemRequest);
         return itemRequestRep.updateItemRequest(itemRequest);
     }
 
     @Override
     public void deleteItemRequestById(Long itemRequestId) {
         if (!itemRequestRep.itemRequestExists(itemRequestId)) {
-            throw new NotFoundException(ItemRequest.class.toString(), itemRequestId);
+            throw new ItemNotFoundException(itemRequestId);
         }
         itemRequestRep.deleteItemRequestById(itemRequestId);
-        log.debug("RequestService: выполнено deleteItemRequestById - ID {}.", itemRequestId);
+        log.debug("RequestService: done deleteItemRequestById - ID {}.", itemRequestId);
     }
 }
