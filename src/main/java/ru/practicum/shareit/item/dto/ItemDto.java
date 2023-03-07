@@ -1,22 +1,30 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
 @Builder
 public class ItemDto {
+
     private Long id;
-    @NotBlank(message = "the 'name' field cannot be empty")
+    private List<CommentDto> comments;
+    private BookingDtoResponse lastBooking;
+    private BookingDtoResponse nextBooking;
+
+    @NotNull
+    @NotBlank
     private String name;
-    @NotBlank(message = "the 'description' field cannot be empty")
+
+    @NotNull
+    @NotBlank
     private String description;
-    @NotNull(message = "the 'available' field is required")
+
+    @NotNull
     private Boolean available;
-    private Long request;
 }

@@ -1,34 +1,38 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.Objects;
+import javax.persistence.*;
+import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Item {
-    private Long id;
-    private String name;
+@Entity
+@Table(name = "items")
+public class Item implements Serializable {
+
     private String description;
-    private Boolean available;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private User owner;
-    private ItemRequest request;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return id.equals(item.id) || name.equals(item.name) && description.equals(item.description);
-    }
+    @Column(name = "item_name")
+    private String name;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description);
-    }
+    @Column(name = "available")
+    private Boolean available;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
+    private ItemRequest itemRequest;
 }
