@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
@@ -29,6 +30,7 @@ import static ru.practicum.shareit.booking.model.Status.REJECTED;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
@@ -43,6 +45,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto addItem(Long userId, ItemDto itemDto) {
         Item newItem = itemMapper.toModel(itemDto);
         newItem.setOwner(userService.getUser(userId));
+        log.info("ItemServiceImpl.addItem : DONE");
         return itemMapper.toDTO(itemRepository.save(newItem));
     }
 
@@ -61,6 +64,7 @@ public class ItemServiceImpl implements ItemService {
         } else {
             throw new UserMismatchException(userId, itemId);
         }
+        log.info("ItemServiceImpl.updateItem : DONE");
         return itemMapper.toDTO(updateItem);
     }
 
@@ -70,6 +74,7 @@ public class ItemServiceImpl implements ItemService {
         if (item.getOwner().getId().equals(userId)) {
             return concatComment(concatBooking(itemMapper.toDTO(item)));
         }
+        log.info("ItemServiceImpl.getItemById : DONE");
         return concatComment(itemMapper.toDTO(item));
     }
 
@@ -91,17 +96,20 @@ public class ItemServiceImpl implements ItemService {
         } else {
             throw new UnsupportedStatusException("User with id-" + userId + " can't comment item with id -" + itemId);
         }
+        log.info("ItemServiceImpl.addComment : DONE");
         return commentMapper.toDTO(comment);
     }
 
     @Override
     public Item getItem(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
+        log.info("ItemServiceImpl.getItem : DONE");
+        return item;
     }
 
     @Override
     public Item composeItem(Item item, ItemDto itemDto) {
-        return Item.builder()
+        Item it = Item.builder()
                 .id(item.getId())
                 .name(itemDto.getName() != null ?
                         itemDto.getName() : item.getName())
@@ -111,18 +119,22 @@ public class ItemServiceImpl implements ItemService {
                 .available(itemDto.getAvailable() != null ?
                         itemDto.getAvailable() : item.getAvailable())
                 .build();
+        log.info("ItemServiceImpl.composeItem : DONE");
+        return it;
     }
 
     @Override
     public ItemDto concatBooking(ItemDto itemDto) {
         itemDto.setLastBooking(getLastAndNextItemBookings(itemDto).get(0));
         itemDto.setNextBooking(getLastAndNextItemBookings(itemDto).get(1));
+        log.info("ItemServiceImpl.concatBooking : DONE");
         return itemDto;
     }
 
     @Override
     public ItemDto concatComment(ItemDto itemDto) {
         itemDto.setComments(getItemComments(itemDto));
+        log.info("ItemServiceImpl.concatComment : DONE");
         return itemDto;
     }
 
