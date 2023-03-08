@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 public class Comment {
 
     private String text;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", locale = "en_GB")
     private LocalDateTime created;
 
     @Id
