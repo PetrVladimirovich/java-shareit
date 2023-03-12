@@ -1,31 +1,30 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
+import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import java.util.Objects;
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@Builder
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "the 'email' field cannot be empty")
-    @Email
-    private String email;
+
+    @NotEmpty
+    @Column(name = "user_name")
     private String name;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) || email.equals(user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email);
-    }
+    @NotEmpty
+    @Email
+    private String email;
 }

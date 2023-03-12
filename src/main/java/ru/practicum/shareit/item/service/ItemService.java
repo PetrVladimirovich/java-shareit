@@ -1,22 +1,25 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-
-import java.util.List;
 
 @Service
 public interface ItemService {
+    ItemDto addItem(Long userId, ItemDto itemDto);
 
-    List<Item> getAllItems(Long userId);
+    ItemDto updateItem(Long itemId, Long userId, ItemDto itemDto);
 
-    Item getItemById(Long userId, Long itemId);
+    ItemDto getItemById(Long userId, Long itemId);
 
-    List<Item> getItemsByText(String text);
+    CommentDto addComment(Long itemId, Long userId, CommentDto commentDto);
 
-    Item createItem(Long userId, Item item, Long requestId);
+    Item getItem(Long itemId);
 
-    Item updateItem(Long userId, Long itemId, Item item, Long requestId);
+    Item composeItem(Item item, ItemDto itemDto);
 
-    void deleteItemById(Long userId, Long itemId);
+    ItemDto concatBooking(ItemDto itemDto);
+
+    ItemDto concatComment(ItemDto itemDto);
 }
