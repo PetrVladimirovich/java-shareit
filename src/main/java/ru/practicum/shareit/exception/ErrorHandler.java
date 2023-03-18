@@ -69,9 +69,9 @@ class ErrorHandler {
                 StringUtils.containsIgnoreCase(e.getMessage(), "there is no access to change the status") ||
                 StringUtils.containsIgnoreCase(e.getMessage(), "booking your own things is prohibited"
                 )) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

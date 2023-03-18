@@ -51,7 +51,7 @@ class ItemControllerIntegrationTests {
             nextBooking, List.of(comment), 2L);
     ItemDto itemDto2 = new ItemDto(2L, "test2", "super test2", Boolean.TRUE, null, null,
             null, null, null);
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
 
     @SneakyThrows
     @Test
@@ -70,13 +70,13 @@ class ItemControllerIntegrationTests {
         Long itemId = 99L;
         Long userId = 1L;
         when(itemService.getById(itemId, userId))
-                .thenThrow(new UserRepositoryException(itemId + ": этот id не найден"));
+                .thenThrow(new UserRepositoryException(itemId + ": this id not found"));
 
         mockMvc.perform(get("/items/{id}", itemId)
                         .header(ID, userId)
                         .accept(MediaType.ALL))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(itemId + ": этот id не найден"));
+                .andExpect(content().string(itemId + ": this id not found"));
 
         verify(itemService, times(1)).getById(any(), any());
     }

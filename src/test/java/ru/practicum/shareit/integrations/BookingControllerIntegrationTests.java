@@ -48,12 +48,12 @@ class BookingControllerIntegrationTests {
     @MockBean
     private BookingService bookingService;
 
-    Item item = new Item(2L, "пылесос", "хороший пылесос", Boolean.TRUE, 2L, 1L);
+    Item item = new Item(2L, "qwe", "hello", Boolean.TRUE, 2L, 1L);
     User booker = new User(1L, "test@mail.ru", "test");
     Booking booking = new Booking(1L, LocalDateTime.now(), LocalDateTime.now().plusDays(1), item, booker, APPROVED);
     Booking booking2 = new Booking(2L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(4), item, booker, APPROVED);
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @SneakyThrows
     @Test
@@ -72,13 +72,13 @@ class BookingControllerIntegrationTests {
         Long bookingId = 1L;
         Long bookerId = 99L;
         when(bookingService.getStatus(bookerId, bookingId))
-                .thenThrow(new BookingServiceException("данные не доступны"));
+                .thenThrow(new BookingServiceException("data not available"));
 
         mockMvc.perform(get("/bookings/{bookingId}", bookingId)
                         .accept(MediaType.ALL)
                         .header(ID, bookerId))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("данные не доступны"));
+                .andExpect(content().string("data not available"));
 
         verify(bookingService, times(1)).getStatus(any(), any());
     }

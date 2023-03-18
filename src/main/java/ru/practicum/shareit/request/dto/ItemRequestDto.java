@@ -18,7 +18,7 @@ public class ItemRequestDto {
     @NotNull
     private String description;
     private long requestor;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SS")
     private LocalDateTime created;
     private List<ItemForItemRequestDto> items;
 }

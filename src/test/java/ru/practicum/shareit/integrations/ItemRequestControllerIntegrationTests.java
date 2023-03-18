@@ -47,9 +47,9 @@ class ItemRequestControllerIntegrationTests {
     private ItemRequestService itemRequestService;
 
 
-    private final ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "веник", 2L, LocalDateTime.now(), new ArrayList<>());
-    private final ItemForItemRequestDto itemForItemRequestDto = new ItemForItemRequestDto(3L, "веник", "обычный веник", Boolean.TRUE, 1L);
-    private final ItemRequestDto itemRequestDto2 = new ItemRequestDto(2L, "совок", 2L, LocalDateTime.now(), new ArrayList<>());
+    private final ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "qwert", 2L, LocalDateTime.now(), new ArrayList<>());
+    private final ItemForItemRequestDto itemForItemRequestDto = new ItemForItemRequestDto(3L, "qwert", "qwert asd", Boolean.TRUE, 1L);
+    private final ItemRequestDto itemRequestDto2 = new ItemRequestDto(2L, "zxc", 2L, LocalDateTime.now(), new ArrayList<>());
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
 
     @SneakyThrows
@@ -95,13 +95,13 @@ class ItemRequestControllerIntegrationTests {
         Long requestId = 99L;
         Long requestorId = 1L;
         when(itemRequestService.getRequest(requestorId, requestId))
-                .thenThrow(new ItemRequestServiceException("не найден запрос с id: " + requestId));
+                .thenThrow(new ItemRequestServiceException("no request found with id: " + requestId));
 
         mockMvc.perform(get("/requests/{requestId}", requestId)
                         .accept(MediaType.ALL)
                         .header(ID, requestorId))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("не найден запрос с id: " + requestId));
+                .andExpect(content().string("no request found with id: " + requestId));
 
         verify(itemRequestService).getRequest(requestorId, requestId);
         verify(itemRequestService, times(1)).getRequest(any(), any());
@@ -113,13 +113,13 @@ class ItemRequestControllerIntegrationTests {
         Long requestId = 1L;
         Long requestorId = 99L;
         when(itemRequestService.getRequest(requestorId, requestId))
-                .thenThrow(new UserRepositoryException(requestorId + ": этот id не найден"));
+                .thenThrow(new UserRepositoryException(requestorId + ": this id not found"));
 
         mockMvc.perform(get("/requests/{requestId}", requestId)
                         .accept(MediaType.ALL)
                         .header(ID, requestorId))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(requestorId + ": этот id не найден"));
+                .andExpect(content().string(requestorId + ": this id not found"));
 
         verify(itemRequestService).getRequest(requestorId, requestId);
         verify(itemRequestService, times(1)).getRequest(any(), any());
@@ -208,16 +208,16 @@ class ItemRequestControllerIntegrationTests {
     void createRequest_whenRequestorIdNotFound_thenStatusNotFoundAndItemRequestServiceMethodCalledOnlyOnce() {
         Long requestorId = 99L;
         when(itemRequestService.create(any(), any()))
-                .thenThrow(new UserRepositoryException(requestorId + ": этот id не найден"));
+                .thenThrow(new UserRepositoryException(requestorId + ": this id not found"));
 
         mockMvc.perform(post("/requests")
-                        .content("{\"description\": \"веник\"}")
+                        .content("{\"description\": \"qwert\"}")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.ALL)
                         .header(ID, requestorId))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(requestorId + ": этот id не найден"));
+                .andExpect(content().string(requestorId + ": this id not found"));
 
         verify(itemRequestService, times(1)).create(any(), any());
     }
@@ -227,12 +227,12 @@ class ItemRequestControllerIntegrationTests {
     void createRequest_whenCorrectRequest_thenStatusOk() {
         Long requestorId = 1L;
         ItemRequestDto dto = new ItemRequestDto();
-        dto.setDescription("веник");
+        dto.setDescription("qwert");
         when(itemRequestService.create(dto, requestorId))
                 .thenReturn(itemRequestDto);
 
         mockMvc.perform(post("/requests")
-                        .content("{\"description\": \"веник\"}")
+                        .content("{\"description\": \"qwert\"}")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.ALL)
