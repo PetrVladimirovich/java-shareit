@@ -1,17 +1,17 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 
-@Service
+import java.util.List;
+
 public interface UserService {
+    List<UserDto> getAll();
 
-    UserDto addUser(UserDto userDto);
+    UserDto create(UserDto dto);
 
-    UserDto updateUser(Long userId, UserDto userDto);
+    UserDto update(Long userId, UserDto dto);
 
-    User getUser(Long userId);
+    UserDto getById(Long userId);
 
-    User composeUser(User user, UserDto userDto);
+    void deleteById(Long userId);
 }

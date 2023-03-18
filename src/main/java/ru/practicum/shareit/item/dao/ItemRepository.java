@@ -1,26 +1,21 @@
 package ru.practicum.shareit.item.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-@Repository
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository {
+    Item save(Item item);
 
-    @Transactional
-    @Modifying
-    @Query("update Item i set i.owner = :owner, i.name = :name, " +
-            "i.description = :description, i.available = :available where i.id = :itemId")
-    void update(User owner, String name, String description, Boolean available, Long itemId);
+    Item update(Long userId, Item item);
 
-    List<Item> findByOwnerId(Long userId);
+    Item getById(Long itemId);
 
-    List<Item> findByDescriptionContainsIgnoreCaseOrNameContainsIgnoreCase(String textD, String textN);
+    Page<Item> getByUserId(Long userId, Pageable page);
 
+    Page<Item> getByText(String text, Pageable page);
+
+    List<Item> getByRequest(Long requestId);
 }

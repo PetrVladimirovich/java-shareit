@@ -1,33 +1,28 @@
 package ru.practicum.shareit.request.model;
 
-import lombok.*;
-import ru.practicum.shareit.user.model.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
+
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "requests")
-public class ItemRequest implements Serializable {
-
+@Data
+public class ItemRequest {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotEmpty
+    @Column(nullable = false)
     private String description;
-
-    @NotEmpty
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requester_id")
-    private User requester;
-
-    @NotEmpty
+    @Column(name = "requestor_id")
+    private Long requestor;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column
     private LocalDateTime created;
 }

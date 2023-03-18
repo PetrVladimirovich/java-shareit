@@ -1,19 +1,19 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
 @Data
-@Builder
 public class CommentDto {
-
     private Long id;
-    private String authorName;
-    private LocalDateTime created;
-
-    @NotEmpty
+    @NotBlank
     private String text;
+    private String authorName;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SS")
+    private LocalDateTime created;
 }

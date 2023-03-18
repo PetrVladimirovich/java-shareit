@@ -1,30 +1,22 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
-
+@Data
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotEmpty
-    @Column(name = "user_name")
-    private String name;
-
-    @NotEmpty
-    @Email
+    @Column(nullable = false, length = 50)
     private String email;
+    @Column(nullable = false, length = 50)
+    private String name;
 }

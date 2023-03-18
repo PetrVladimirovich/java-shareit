@@ -1,84 +1,67 @@
 package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
+
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Comparator;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.Constants.ID;
 
+@Validated
 @RestController
-@RequestMapping("/items")
 @RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/items")
 public class ItemController {
-    private final ItemRepository itemRepository;
     private final ItemService itemService;
-    private final ItemMapper itemMapper;
-
-    @GetMapping
-    public List<ItemDto> getAllItemsOfUserWithId(@NotEmpty @RequestHeader(ID) Long userId) {
-        log.info("ItemController : GET /items");
-        return itemRepository.findByOwnerId(userId).stream()
-                .map(itemMapper::toDTO)
-                .map(itemService::concatBooking)
-                .map(itemService::concatComment)
-                .sorted(Comparator.comparing(ItemDto::getId))
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/{itemId}")
-    public ItemDto getItemById(@NotEmpty @RequestHeader(ID) Long userId, @PathVariable Long itemId) {
-        log.info("ItemController : GET /items/{}", itemId);
-        return itemService.getItemById(userId, itemId);
-    }
-
-    @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam String text) {
-        if (text != null && !text.isEmpty()) {
-            log.info("ItemController : GET /items/search?test={} ...", text.substring(0, text.length() % 5));
-            return itemRepository.findByDescriptionContainsIgnoreCaseOrNameContainsIgnoreCase(text, text)
-                    .stream()
-                    .filter(Item::getAvailable)
-                    .map(itemMapper::toDTO)
-                    .collect(Collectors.toList());
-        } else {
-            log.info("ItemController EMPTY REQUEST PARAM: GET /items/search?test=...");
-            return new ArrayList<>();
-        }
-    }
-
-    @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@PathVariable Long itemId,
-                              @NotEmpty @RequestHeader(ID) Long userId,
-                              @RequestBody ItemDto itemDto) {
-        log.info("ItemController : PATCH /items/{}", itemId);
-        return itemService.updateItem(itemId, userId, itemDto);
-    }
 
     @PostMapping
-    public ItemDto addItem(@NotEmpty @RequestHeader(ID) Long userId, @Valid @RequestBody ItemDto itemDto) {
-        log.info("ItemController : POST /items");
-        return itemService.addItem(userId, itemDto);
+    public ResponseEntity<ItemDto> createItem(@RequestHeader(ID) @NotNull Long userId,
+                                              @RequestBody @NotNull ItemDto dto) {
+        return new ResponseEntity<>(itemService.create(userId, dto), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ItemDto> updateItem(@RequestHeader(ID) @NotNull Long userId,
+                                              @PathVariable("id") Long itemId,
+                                              @RequestBody @NotNull ItemDto dto) {
+        return new ResponseEntity<>(itemService.update(userId, itemId, dto), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemDto> getItem(@RequestHeader(ID) Long userId,
+                                           @PathVariable("id") Long itemId) {
+        return new ResponseEntity<>(itemService.getById(itemId, userId), HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ItemDto>> getItems(@RequestHeader(ID) @NotNull Long userId,
+                                                  @RequestParam(name = "from", required = false) @PositiveOrZero Integer from,
+                                                  @RequestParam(name = "size", required = false) @Positive Integer size) {
+        return new ResponseEntity<>(itemService.getByUserId(userId, from, size), HttpStatus.OK);
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<List<ItemDto>> searchItems(@RequestParam("text") String text,
+                                                     @RequestParam(name = "from", required = false) @PositiveOrZero Integer from,
+                                                     @RequestParam(name = "size", required = false) @Positive Integer size) {
+        return new ResponseEntity<>(itemService.getByText(text, from, size), HttpStatus.OK);
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@PathVariable Long itemId,
-                                 @NotEmpty @RequestHeader(ID) Long userId,
-                                 @Valid @RequestBody CommentDto commentDto) {
-        log.info("ItemController : POST /items/{}/comment", itemId);
-        return itemService.addComment(itemId, userId, commentDto);
+    public ResponseEntity<CommentDto> createComment(@RequestHeader(ID) @NotNull Long authorId,
+                                                    @PathVariable("itemId") Long itemId,
+                                                    @RequestBody @NotNull @Valid CommentDto dto) {
+        return new ResponseEntity<>(itemService.createComment(authorId, itemId, dto), HttpStatus.OK);
     }
 }

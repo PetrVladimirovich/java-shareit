@@ -1,29 +1,29 @@
 package ru.practicum.shareit.booking.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+    Optional<Booking> findByIdAndItemOwner(Long bookingId, Long ownerId);
 
-    List<Booking> findAllByBooker_Id(Long bookerId);
+    @Query(" select b from Booking b " +
+            "inner join b.item i " +
+            "inner join b.booker u " +
+            "where b.id = ?1 and (i.owner = ?2 or u.id = ?2)")
+    Optional<Booking> findByIdAndBookerIdAndItemOwner(Long bookingId, Long userId);
 
-    List<Booking> findAllByBooker_IdNotAndItemIn(Long userId, List<Item> ownerItems);
 
-    @Transactional
-    @Modifying
-    @Query("update Booking b set b.status = :status  where b.id = :bookingId")
-    void update(Status status, Long bookingId);
+    Page<Booking> findByBookerId(Long bookerId, Pageable page);
 
-    List<Booking> findAllByItem_Id(Long itemId);
+    Page<Booking> findByItemOwner(Long ownerId, Pageable page);
 
-    List<Booking> findAllByItem_IdAndBooker_Id(Long itemId, Long bookerId);
+    List<Booking> findByItemIdAndItemOwner(Long itemId, Long userId);
+
+    List<Booking> findByItemIdAndBookerId(Long itemId, Long bookerId);
 }
