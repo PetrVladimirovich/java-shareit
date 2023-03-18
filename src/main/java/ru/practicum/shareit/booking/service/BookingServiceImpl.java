@@ -46,40 +46,57 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingMapper.toNewBooking(dto);
         booking.setBooker(userRepository.getById(bookerId));
         booking.setItem(itemRepository.getById(dto.getItemId()));
+
         if (booking.getItem().getOwner().equals(bookerId)) {
-            throw new BookingServiceException("бронирование своих вещей запрещено");
+            log.warn("BookingServiceImpl.create({}(BookingDto), {}(bookerId)) : " +
+                    "BookingServiceException(\"booking your own things is prohibited\")", dto, bookerId);
+            throw new BookingServiceException("booking your own things is prohibited");
         }
+
         if (booking.getItem().getAvailable().equals(true)) {
             bookingRepository.save(booking);
-            log.info("Добавлена новая бронь: {}", booking.toString());
+
+            log.info("BookingServiceImpl.create({}(BookingDto), {}(bookerId)) : DONE", dto, bookerId);
             return booking;
         }
-        throw new BookingServiceException("бронирование не доступно");
+
+        log.warn("BookingServiceImpl.create({}(BookingDto), {}(bookerId)) : " +
+                "BookingServiceException(\"booking is not available\")", dto, bookerId);
+        throw new BookingServiceException("booking is not available");
     }
 
     @Override
     public Booking updateStatus(Long ownerId, Long bookingId, Boolean status) {
         Booking booking = bookingRepository.findByIdAndItemOwner(bookingId, ownerId)
-                .orElseThrow(() -> new BookingServiceException("нет доступа для изменения статуса"));
+                .orElseThrow(() -> new BookingServiceException("there is no access to change the status"));
+
         if (booking.getStatus() == ItemStatus.APPROVED) {
-            throw new BookingServiceException("статус утверждено, изменение запрещено");
+            log.warn("BookingServiceImpl.updateStatus({}(ownerId), {}(bookingId), {}(status)) : " +
+                    "BookingServiceException(\"status approved, modification prohibited\")", ownerId, bookingId, status);
+            throw new BookingServiceException("status approved, modification prohibited");
         }
+
         if (status.equals(true)) {
             booking.setStatus(ItemStatus.APPROVED);
         } else {
             booking.setStatus(ItemStatus.REJECTED);
         }
+
         bookingRepository.save(booking);
-        log.info("Обновление статуса бронирования: {}", booking.toString());
+        log.info("BookingServiceImpl.updateStatus({}(ownerId), {}(bookingId), {}(status)) : DONE", ownerId, bookingId, status);
         return booking;
     }
 
     @Override
     public Booking getStatus(Long userId, Long bookingId) {
+        log.info("BookingServiceImpl.getStatus({}(userId), {}(bookingId)) : DONE", userId, bookingId);
         return bookingRepository
                 .findByIdAndBookerIdAndItemOwner(bookingId, userId)
                 .orElseGet(() -> {
-                    throw new BookingServiceException("данные не доступны");
+
+                    log.warn("BookingServiceImpl.getStatus({}(userId), {}(bookingId)) : " +
+                            "BookingServiceException(\"data is not available\")", userId, bookingId);
+                    throw new BookingServiceException("data is not available");
                 });
     }
 
@@ -93,9 +110,13 @@ public class BookingServiceImpl implements BookingService {
             Sort sortByCreated = Sort.by(Sort.Direction.DESC, "start");
             page = PageRequest.of(from / size, size, sortByCreated);
         }
+
         Page<Booking> bookingPage = bookingRepository.findByBookerId(userId, page);
         List<Booking> bookings = new ArrayList<>();
         bookingPage.getContent().forEach(bookings::add);
+
+        log.info("BookingServiceImpl.getBookerBookings({}(userId), {}(BookingStatusDto), {}(from), {}(size))" +
+                                                                        " : DONE", userId, status, from, size);
         return getBookings(status, bookings);
     }
 
@@ -110,9 +131,13 @@ public class BookingServiceImpl implements BookingService {
             Sort sortByCreated = Sort.by(Sort.Direction.DESC, "start");
             page = PageRequest.of(from / size, size, sortByCreated);
         }
+
         Page<Booking> bookingPage = bookingRepository.findByItemOwner(userId, page);
         List<Booking> bookings = new ArrayList<>();
         bookingPage.getContent().forEach(bookings::add);
+
+        log.info("BookingServiceImpl.getUserBookings({}(userId), {}(BookingStatusDto), {}(from), {}(size))" +
+                " : DONE", userId, status, from, size);
         return getBookings(status, bookings);
     }
 

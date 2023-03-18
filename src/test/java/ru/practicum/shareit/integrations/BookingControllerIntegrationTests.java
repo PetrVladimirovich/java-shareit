@@ -72,13 +72,13 @@ class BookingControllerIntegrationTests {
         Long bookingId = 1L;
         Long bookerId = 99L;
         when(bookingService.getStatus(bookerId, bookingId))
-                .thenThrow(new BookingServiceException("data not available"));
+                .thenThrow(new BookingServiceException("data is not available"));
 
         mockMvc.perform(get("/bookings/{bookingId}", bookingId)
                         .accept(MediaType.ALL)
                         .header(ID, bookerId))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("data not available"));
+                .andExpect(content().string("data is not available"));
 
         verify(bookingService, times(1)).getStatus(any(), any());
     }

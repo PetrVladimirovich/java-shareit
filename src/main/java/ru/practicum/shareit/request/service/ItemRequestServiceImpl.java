@@ -44,7 +44,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto create(ItemRequestDto dto, Long requestorId) {
         dto.setRequestor(userRepository.getById(requestorId).getId());
         ItemRequest itemRequest = itemRequestRepository.save(itemRequestMapper.toItemRequest(dto));
-        log.info("add new request: {}", itemRequest.toString());
+
+        log.info("ItemRequestServiceImpl.create({}(ItemRequestDto), {}(requestorId)) : DONE", dto, requestorId);
         return itemRequestMapper.toItemRequestDto(itemRequest);
     }
 
@@ -54,6 +55,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemRequest> itemsRequests = itemRequestRepository.findAllByRequestor(requestorId);
         List<ItemRequestDto> dto = new ArrayList<>();
         itemsRequests.forEach(itemRequest -> dto.add(fillItemRequestDto(itemRequest)));
+
+        log.info("ItemRequestServiceImpl.create({}(ItemRequestDto), {}(requestorId)) : DONE", dto, requestorId);
         return dto.stream()
                 .sorted(Comparator.comparing(ItemRequestDto::getCreated).reversed())
                 .collect(Collectors.toList());
@@ -64,6 +67,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         userRepository.getById(requestorId);
         ItemRequest itemRequest = itemRequestRepository.findById(itemRequestId)
                 .orElseThrow(() -> new ItemRequestServiceException("no request found with id: " + itemRequestId));
+
+        log.info("ItemRequestServiceImpl.getRequest({}(requestorId), {}(itemRequestId)) : DONE", requestorId, requestorId);
         return fillItemRequestDto(itemRequest);
     }
 
@@ -77,11 +82,13 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             Sort sortByCreated = Sort.by(Sort.Direction.DESC, "created");
             page = PageRequest.of(from / size, size, sortByCreated);
         }
+
         Page<ItemRequest> itemRequestPage = itemRequestRepository.findByRequestorNot(requestorId, page);
         List<ItemRequestDto> itemsRequestsDto = new ArrayList<>();
         itemRequestPage.getContent().forEach(itemRequest -> {
-            itemsRequestsDto.add(fillItemRequestDto(itemRequest));
-        });
+                                                itemsRequestsDto.add(fillItemRequestDto(itemRequest));
+                                            });
+        log.info("ItemRequestServiceImpl.getAll({}(requestorId), {}(from), {}(size)) : DONE", requestorId, from, size);
         return itemsRequestsDto;
     }
 

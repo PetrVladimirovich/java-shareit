@@ -61,10 +61,13 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto create(Long userId, ItemDto dto) {
         if (BooleanUtils.isNotTrue(dto.getAvailable()) || StringUtils.isBlank(dto.getName()) ||
                 StringUtils.isBlank(dto.getDescription())) {
+            log.warn("ItemServiceImpl.create({}(userId), {}(UserDto)) : ItemServiceException(\"invalid properties of a thing\")", userId, dto);
             throw new ItemServiceException("invalid properties of a thing");
         }
         Item item = itemMapper.toItem(dto);
         item.setOwner(userId);
+
+        log.info("ItemServiceImpl.create({}(userId), {}(ItemDto)) : DONE", userId, dto);
         return itemMapper.toDto(itemRepository.save(item));
     }
 
@@ -72,6 +75,8 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto update(Long userId, Long itemId, ItemDto dto) {
         Item item = itemMapper.toItem(dto);
         item.setId(itemId);
+
+        log.info("ItemServiceImpl.update({}(userId), {}(itemId), {}(ItemDto)) : DONE", userId, itemId, dto);
         return itemMapper.toDto(itemRepository.update(userId, item));
     }
 
@@ -79,6 +84,8 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getById(Long itemId, Long userId) {
         ItemDto itemDto = itemMapper.toDto(itemRepository.getById(itemId));
         prepareDto(itemId, userId, itemDto);
+
+        log.info("ItemServiceImpl.getById({}(itemId), {}(userId)) : DONE", itemId, userId);
         return itemDto;
     }
 
@@ -105,11 +112,15 @@ public class ItemServiceImpl implements ItemService {
             Sort sortById = Sort.by(Sort.Direction.ASC, "id");
             page = PageRequest.of(from / size, size, sortById);
         }
+
         Page<Item> itemPage = itemRepository.getByUserId(userId, page);
         List<ItemDto> itemDto = itemMapper.toDtoItems(itemPage.getContent());
+
         for (ItemDto dto : itemDto) {
             prepareDto(dto.getId(), userId, dto);
         }
+
+        log.info("ItemServiceImpl.getByUserId({}(userId), {}(from), {}(size)) : DONE", userId, from, size);
         return itemDto.stream()
                 .sorted(Comparator.comparing(ItemDto::getId))
                 .collect(Collectors.toList());
@@ -120,6 +131,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
+
         Pageable page;
         if (size == null || from == null) {
             page = Pageable.unpaged();
@@ -128,6 +140,8 @@ public class ItemServiceImpl implements ItemService {
             page = PageRequest.of(from / size, size, sortById);
         }
         Page<Item> itemPage = itemRepository.getByText(text, page);
+
+        log.info("ItemServiceImpl.getByText({}(text), {}(from), {}(size)) : DONE", text, from, size);
         return itemMapper.toDtoItems(itemPage.getContent());
     }
 
@@ -135,14 +149,19 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto createComment(Long authorId, Long itemId, CommentDto dto) {
         List<Booking> bookings = bookingRepository.findByItemIdAndBookerId(itemId, authorId).stream()
                 .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());
+
         if (bookings.isEmpty()) {
+            log.warn("ItemServiceImpl.createComment({}(authorId), {}(itemId), {}(CommentDto)) : UserServiceException" +
+                    "(\"the name and/or description fields are not filled in\")", authorId, itemId, dto);
             throw new CommentServiceException("it is impossible to add a review for this thing");
         }
+
         Comment comment = commentMapper.toComment(dto);
         comment.setItem(itemRepository.getById(itemId));
         comment.setAuthor(userRepository.getById(authorId));
         commentRepository.save(comment);
-        log.info("Comment added: {}", comment.toString());
+
+        log.info("ItemServiceImpl.createComment({}(authorId), {}(itemId), {}(CommentDto)) : DONE", authorId, itemId, dto);
         return commentMapper.toDto(comment);
     }
 }
