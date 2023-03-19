@@ -1,10 +1,9 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
@@ -42,20 +42,6 @@ public class ItemServiceImpl implements ItemService {
     private final CommentMapper commentMapper;
     private final UserRepository userRepository;
     private final BookingMapper bookingMapper;
-
-    @Autowired
-    public ItemServiceImpl(@Qualifier("itemDbStorage") ItemRepository itemRepository, ItemMapper itemMapper,
-                           BookingRepository bookingRepository, CommentRepository commentRepository,
-                           CommentMapper commentMapper, @Qualifier("dbStorage") UserRepository userRepository,
-                           BookingMapper bookingMapper) {
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
-        this.bookingRepository = bookingRepository;
-        this.commentRepository = commentRepository;
-        this.commentMapper = commentMapper;
-        this.userRepository = userRepository;
-        this.bookingMapper = bookingMapper;
-    }
 
     @Override
     public ItemDto create(Long userId, ItemDto dto) {

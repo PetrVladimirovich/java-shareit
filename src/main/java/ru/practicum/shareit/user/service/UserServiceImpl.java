@@ -1,9 +1,8 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.dao.UserRepository;
@@ -14,16 +13,11 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserServiceImpl(@Qualifier("dbStorage") UserRepository repository, UserMapper userMapper) {
-        this.repository = repository;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public UserDto create(UserDto dto) {

@@ -18,10 +18,13 @@ public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String description;
+
     @Column(name = "requestor_id")
     private Long requestor;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column
     private LocalDateTime created;

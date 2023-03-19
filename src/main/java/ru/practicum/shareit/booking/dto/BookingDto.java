@@ -8,15 +8,19 @@ import ru.practicum.shareit.booking.validator.BookingDtoValid;
 import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDateTime;
 
+import static ru.practicum.shareit.Constants.TIME_DATE_PATTERN;
+
 @AllArgsConstructor
 @BookingDtoValid
 @Data
 public class BookingDto {
     private Long itemId;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SS")
+
+    @JsonFormat(pattern = TIME_DATE_PATTERN)
     @FutureOrPresent
     private LocalDateTime start;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SS")
+
+    @JsonFormat(pattern = TIME_DATE_PATTERN)
     @FutureOrPresent
     private LocalDateTime end;
 }

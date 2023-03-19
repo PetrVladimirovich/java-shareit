@@ -31,6 +31,7 @@ import static org.hamcrest.core.Is.is;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.practicum.shareit.Constants.ID;
+import static ru.practicum.shareit.Constants.TIME_DATE_PATTERN;
 import static ru.practicum.shareit.item.model.ItemStatus.WAITING;
 
 @WebMvcTest(controllers = ItemController.class)
@@ -51,7 +52,7 @@ class ItemControllerIntegrationTests {
             nextBooking, List.of(comment), 2L);
     ItemDto itemDto2 = new ItemDto(2L, "test2", "super test2", Boolean.TRUE, null, null,
             null, null, null);
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_DATE_PATTERN);
 
     @SneakyThrows
     @Test

@@ -34,6 +34,7 @@ import static org.hamcrest.core.Is.is;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.practicum.shareit.Constants.ID;
+import static ru.practicum.shareit.Constants.TIME_DATE_PATTERN;
 
 @WebMvcTest(controllers = ItemRequestController.class)
 class ItemRequestControllerIntegrationTests {
@@ -50,7 +51,7 @@ class ItemRequestControllerIntegrationTests {
     private final ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "qwert", 2L, LocalDateTime.now(), new ArrayList<>());
     private final ItemForItemRequestDto itemForItemRequestDto = new ItemForItemRequestDto(3L, "qwert", "qwert asd", Boolean.TRUE, 1L);
     private final ItemRequestDto itemRequestDto2 = new ItemRequestDto(2L, "zxc", 2L, LocalDateTime.now(), new ArrayList<>());
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SS");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_DATE_PATTERN);
 
     @SneakyThrows
     @Test

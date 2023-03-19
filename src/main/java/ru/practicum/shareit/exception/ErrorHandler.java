@@ -3,15 +3,11 @@ package ru.practicum.shareit.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.exception.bookings.BookingServiceException;
-import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.exception.items.CommentServiceException;
 import ru.practicum.shareit.exception.items.ItemRepositoryException;
 import ru.practicum.shareit.exception.items.ItemServiceException;
-import ru.practicum.shareit.request.controller.ItemRequestController;
 import ru.practicum.shareit.exception.requests.ItemRequestServiceException;
-import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.exception.users.UserRepositoryException;
 import ru.practicum.shareit.exception.users.UserServiceException;
 import org.springframework.http.HttpStatus;
@@ -23,10 +19,8 @@ import javax.validation.ConstraintViolationException;
 import java.sql.SQLException;
 import java.util.Map;
 
-
 @Slf4j
-@ControllerAdvice(assignableTypes = {ItemController.class, UserController.class, BookingController.class,
-        ItemRequestController.class})
+@ControllerAdvice
 class ErrorHandler {
 
     @ExceptionHandler(UserRepositoryException.class)

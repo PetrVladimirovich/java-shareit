@@ -1,8 +1,7 @@
 package ru.practicum.shareit.item.dao;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -11,26 +10,15 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.exception.users.UserRepositoryException;
 import ru.practicum.shareit.user.dao.UserRepository;
-
-import javax.persistence.EntityManager;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 @Repository("itemDbStorage")
 public class ItemRepositoryImpl implements ItemRepository {
     private final ItemRepositoryJpa itemRepositoryJpa;
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
-    private EntityManager entityManager;
-
-    @Autowired
-    public ItemRepositoryImpl(ItemRepositoryJpa itemRepositoryJpa, @Qualifier("dbStorage") UserRepository userRepository,
-                              ItemMapper itemMapper, EntityManager entityManager) {
-        this.itemRepositoryJpa = itemRepositoryJpa;
-        this.userRepository = userRepository;
-        this.itemMapper = itemMapper;
-        this.entityManager = entityManager;
-    }
 
     @Override
     public Item save(Item item) {

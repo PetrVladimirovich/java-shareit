@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestMapper itemRequestMapper;
@@ -29,16 +30,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
-
-    public ItemRequestServiceImpl(ItemRequestMapper itemRequestMapper, ItemRequestRepository itemRequestRepository,
-                                  @Qualifier("dbStorage") UserRepository userRepository,
-                                  @Qualifier("itemDbStorage") ItemRepository itemRepository, ItemMapper itemMapper) {
-        this.itemRequestMapper = itemRequestMapper;
-        this.itemRequestRepository = itemRequestRepository;
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
-    }
 
     @Override
     public ItemRequestDto create(ItemRequestDto dto, Long requestorId) {

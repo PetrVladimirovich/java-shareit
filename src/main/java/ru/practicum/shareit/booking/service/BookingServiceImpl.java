@@ -1,8 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,21 +24,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingMapper bookingMapper;
-
-    @Autowired
-    public BookingServiceImpl(@Qualifier("dbStorage") UserRepository userRepository, BookingRepository bookingRepository,
-                              BookingMapper bookingMapper, @Qualifier("itemDbStorage") ItemRepository itemRepository) {
-        this.bookingRepository = bookingRepository;
-        this.userRepository = userRepository;
-        this.bookingMapper = bookingMapper;
-        this.itemRepository = itemRepository;
-    }
 
     @Override
     public Booking create(BookingDto dto, Long bookerId) {
