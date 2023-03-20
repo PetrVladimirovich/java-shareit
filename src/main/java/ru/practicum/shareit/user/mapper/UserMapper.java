@@ -4,11 +4,13 @@ import org.mapstruct.Mapper;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserDto toDTO(User model);
+    User toUser(UserDto userDto);
 
-    User toModel(UserDto dto);
+    UserDto toDto(User user);
 
+    List<UserDto> toUserDto(List<User> user);
 }

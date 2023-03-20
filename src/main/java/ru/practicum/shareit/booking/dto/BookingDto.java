@@ -1,20 +1,26 @@
 package ru.practicum.shareit.booking.dto;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.practicum.shareit.booking.model.Status;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.booking.validator.BookingDtoValid;
 
+import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDateTime;
 
+import static ru.practicum.shareit.Constants.TIME_DATE_PATTERN;
+
+@AllArgsConstructor
+@BookingDtoValid
 @Data
-@Builder
 public class BookingDto {
-    private final Long id;
-    private final LocalDateTime start;
-    private final LocalDateTime end;
-    private final Status status;
-    private final UserDto booker;
-    private final ItemDto item;
+    private Long itemId;
+
+    @JsonFormat(pattern = TIME_DATE_PATTERN)
+    @FutureOrPresent
+    private LocalDateTime start;
+
+    @JsonFormat(pattern = TIME_DATE_PATTERN)
+    @FutureOrPresent
+    private LocalDateTime end;
 }

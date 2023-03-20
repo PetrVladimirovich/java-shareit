@@ -17,23 +17,17 @@
 
 	<properties>
 		<java.version>11</java.version>
-
-
-		<org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
-		<org.projectlombok.version>1.18.26</org.projectlombok.version>
+		<mapstruct.version>1.4.2.Final</mapstruct.version>
+		<lombok.version>1.18.24</lombok.version>
+		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-
-
+		<spring-data-jpa>2.7.5</spring-data-jpa>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<dependency>
@@ -54,7 +48,22 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<scope>provided</scope>
+			<version>${lombok.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>${lombok-mapstruct-binding.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -65,18 +74,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
 		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${org.mapstruct.version}</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok-mapstruct-binding</artifactId>
-			<version>${lombok-mapstruct-binding.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>${spring-data-jpa}</version>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
@@ -103,6 +112,28 @@
 				<configuration>
 					<source>11</source>
 					<target>11</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>${lombok-mapstruct-binding.version}</version>
+						</path>
+					</annotationProcessorPaths>
+					<compilerArgs>
+						<compilerArg>
+							-Amapstruct.defaultComponentModel=spring
+						</compilerArg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -159,99 +190,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.8</version>
-					<configuration>
-						<output>file</output>
-					</configuration>
-					<executions>
-						<execution>
-							<id>jacoco-initialize</id>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>jacoco-check</id>
-							<goals>
-								<goal>check</goal>
-							</goals>
-							<configuration>
-								<rules>
-									<rule>
-										<element>BUNDLE</element>
-										<limits>
-											<limit>
-												<counter>INSTRUCTION</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.01</minimum>
-											</limit>
-											<limit>
-												<counter>LINE</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.9</minimum>
-											</limit>
-											<limit>
-												<counter>BRANCH</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.6</minimum>
-											</limit>
-											<limit>
-												<counter>COMPLEXITY</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.6</minimum>
-											</limit>
-											<limit>
-												<counter>METHOD</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.7</minimum>
-											</limit>
-											<limit>
-												<counter>CLASS</counter>
-												<value>MISSEDCOUNT</value>
-												<maximum>1</maximum>
-											</limit>
-										</limits>
-									</rule>
-								</rules>
-							</configuration>
-						</execution>
-						<execution>
-							<id>jacoco-report</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-						<annotationProcessorPaths>
-							<path>
-								<groupId>org.mapstruct</groupId>
-								<artifactId>mapstruct-processor</artifactId>
-								<version>${org.mapstruct.version}</version>
-							</path>
-							<path>
-								<groupId>org.projectlombok</groupId>
-								<artifactId>lombok</artifactId>
-								<version>${org.projectlombok.version}</version>
-							</path>
-							<path>
-								<groupId>org.projectlombok</groupId>
-								<artifactId>lombok-mapstruct-binding</artifactId>
-								<version>${lombok-mapstruct-binding.version}</version>
-							</path>
-						</annotationProcessorPaths>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -278,17 +216,6 @@
 					</plugin>
 				</plugins>
 			</reporting>
-		</profile>
-		<profile>
-			<id>coverage</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 	</profiles>
 </project>

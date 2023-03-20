@@ -1,35 +1,38 @@
 package ru.practicum.shareit.item.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import ru.practicum.shareit.user.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+import lombok.NoArgsConstructor;
+import ru.practicum.shareit.user.model.*;
+
+import static ru.practicum.shareit.Constants.TIME_DATE_PATTERN;
+
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "comments")
+@Data
 public class Comment {
-
-    private String text;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", locale = "en_GB")
-    private LocalDateTime created;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
+    @Column(nullable = false)
+    private String text;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "item_id", referencedColumnName = "id")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
+
+    @JsonFormat(pattern = TIME_DATE_PATTERN)
+    private LocalDateTime created;
 }
