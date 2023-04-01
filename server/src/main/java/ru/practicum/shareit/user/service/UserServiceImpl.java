@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto dto) {
         if (StringUtils.isBlank(dto.getEmail()) || StringUtils.isBlank(dto.getName())) {
-            throw new UserServiceException("поля name и/или description не заполнены");
+            throw new UserServiceException("the name and/or description fields are not filled in");
         }
         return userMapper.toDto(repository.create(userMapper.toUser(dto)));
     }

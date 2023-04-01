@@ -12,15 +12,16 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 import java.util.Map;
 
+import static ru.practicum.shareit.utils.Consts.API_PREFIX_REQUEST;
+
 @Service
 public class ItemRequestClient extends BaseClient {
-    private static final String API_PREFIX = "/requests";
 
     @Autowired
     public ItemRequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX_REQUEST))
                         .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                         .build()
         );

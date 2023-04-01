@@ -20,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User create(User user) {
         User newUser = userRepositoryJpa.save(user);
-        log.info("Добавлен новый пользователь: {}", newUser.toString());
+        log.info("UserRepositoryImpl.create() {}", newUser.toString());
         return newUser;
     }
 
@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
             user.setEmail(updatedUser.getEmail());
         }
         userRepositoryJpa.save(user);
-        log.info("Данные пользователя обновлены: {}", user.toString());
+        log.info("UserRepositoryImpl.save() {}", user.toString());
         return user;
     }
 
@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User getById(Long userId) {
         return userRepositoryJpa.findById(userId)
                 .orElseGet(() -> {
-                    throw new UserRepositoryException(userId + ": этот id не найден");
+                    throw new UserRepositoryException(userId + ":this id not found");
                 });
     }
 
@@ -50,7 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteById(Long userId) {
         userRepositoryJpa.findById(userId).ifPresent(u -> {
             userRepositoryJpa.deleteById(userId);
-            log.info("Пользователь удален: {}", u.toString());
+            log.info("UserRepositoryImpl.deleteById() {}", u.toString());
         });
     }
 

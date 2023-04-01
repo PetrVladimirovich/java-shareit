@@ -36,7 +36,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item save(Item item) {
         userRepository.getById(item.getOwner());
         Item newItem = itemRepositoryJpa.save(item);
-        log.info("Добавлена новая вещь: {}", newItem.toString());
+        log.info("ItemRepositoryImpl.save() {}", newItem.toString());
         return newItem;
     }
 
@@ -44,11 +44,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item update(Long userId, Item item) {
         Item itemForUpdate = getById(item.getId());
         if (!itemForUpdate.getOwner().equals(userId) || !itemForUpdate.getId().equals(item.getId())) {
-            throw new ItemRepositoryException("эта вещь недоступна для редактирования");
+            throw new ItemRepositoryException("this thing is not editable");
         }
         itemMapper.updateItem(item, itemForUpdate);
         itemRepositoryJpa.save(itemForUpdate);
-        log.info("Данные вещи обновлены: {}", itemForUpdate.toString());
+        log.info("ItemRepositoryImpl.update() {}", itemForUpdate.toString());
         return itemForUpdate;
     }
 
@@ -56,7 +56,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item getById(Long itemId) {
         return itemRepositoryJpa.findById(itemId)
                 .orElseGet(() -> {
-                    throw new UserRepositoryException(itemId + ": этот id не найден");
+                    throw new UserRepositoryException(itemId + ": this id not found");
                 });
     }
 

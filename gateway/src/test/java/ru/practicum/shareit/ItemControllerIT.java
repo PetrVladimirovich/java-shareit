@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.practicum.shareit.item.ItemController.USER_ID_TAG;
+import static ru.practicum.shareit.utils.Consts.REQUESTOR_ID_TAG;
 
 
 @WebMvcTest(controllers = ItemController.class)
@@ -57,7 +57,7 @@ class ItemControllerIT {
         String from = "0";
 
         mockMvc.perform(get("/items")
-                        .header(USER_ID_TAG, userId)
+                        .header(REQUESTOR_ID_TAG, userId)
                         .param("from", from)
                         .param("size", size)
                         .accept(MediaType.ALL))
@@ -74,7 +74,7 @@ class ItemControllerIT {
         String from = "-1";
 
         mockMvc.perform(get("/items")
-                        .header(USER_ID_TAG, userId)
+                        .header(REQUESTOR_ID_TAG, userId)
                         .param("from", from)
                         .param("size", size)
                         .accept(MediaType.ALL))
@@ -96,7 +96,7 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.ALL)
-                        .header(USER_ID_TAG, authorId))
+                        .header(REQUESTOR_ID_TAG, authorId))
                 .andExpect(status().isBadRequest());
 
         verify(itemClient, never()).createComment(any(), any(), any());
@@ -112,7 +112,7 @@ class ItemControllerIT {
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.ALL)
-                        .header(USER_ID_TAG, authorId))
+                        .header(REQUESTOR_ID_TAG, authorId))
                 .andExpect(status().isBadRequest());
 
         verify(itemClient, never()).createComment(any(), any(), any());

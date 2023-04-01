@@ -9,6 +9,8 @@ import javax.persistence.*;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.shareit.utils.Consts.TIME_PATTERN;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -22,7 +24,7 @@ public class ItemRequest {
     private String description;
     @Column(name = "requestor_id")
     private Long requestor;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = TIME_PATTERN)
     @Column
     private LocalDateTime created;
 }

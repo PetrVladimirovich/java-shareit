@@ -44,7 +44,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto create(ItemRequestDto dto, Long requestorId) {
         dto.setRequestor(userRepository.getById(requestorId).getId());
         ItemRequest itemRequest = itemRequestRepository.save(itemRequestMapper.toItemRequest(dto));
-        log.info("Добавлен новый запрос: {}", itemRequest.toString());
+        log.info("ItemRequestServiceImpl.create() {}", itemRequest.toString());
         return itemRequestMapper.toItemRequestDto(itemRequest);
     }
 
@@ -63,7 +63,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto getRequest(Long requestorId, Long itemRequestId) {
         userRepository.getById(requestorId);
         ItemRequest itemRequest = itemRequestRepository.findById(itemRequestId)
-                .orElseThrow(() -> new ItemRequestServiceException("не найден запрос с id: " + itemRequestId));
+                .orElseThrow(() -> new ItemRequestServiceException("NOT FOUND request with id: " + itemRequestId));
         return fillItemRequestDto(itemRequest);
     }
 

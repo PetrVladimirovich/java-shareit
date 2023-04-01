@@ -25,8 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.practicum.shareit.booking.BookingController.BOOKER_ID_TAG;
-import static ru.practicum.shareit.request.ItemRequestController.REQUESTOR_ID_TAG;
+import static ru.practicum.shareit.utils.Consts.REQUESTOR_ID_TAG;
 
 
 @WebMvcTest(controllers = BookingController.class)
@@ -59,7 +58,7 @@ class BookingControllerIT {
         Long bookingId = 1L;
 
         mockMvc.perform(patch("/bookings/{bookingId}", bookingId)
-                        .header(BOOKER_ID_TAG, ownerId)
+                        .header(REQUESTOR_ID_TAG, ownerId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.ALL))
@@ -78,7 +77,7 @@ class BookingControllerIT {
         String state = "ALL";
 
         mockMvc.perform(get("/bookings")
-                        .header(BOOKER_ID_TAG, userId)
+                        .header(REQUESTOR_ID_TAG, userId)
                         .param("state", state)
                         .param("from", from)
                         .param("size", size)
@@ -97,7 +96,7 @@ class BookingControllerIT {
         String state = "ALL";
 
         mockMvc.perform(get("/bookings")
-                        .header(BOOKER_ID_TAG, userId)
+                        .header(REQUESTOR_ID_TAG, userId)
                         .param("state", state.toString())
                         .param("from", from)
                         .param("size", size)

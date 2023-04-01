@@ -58,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto create(Long userId, ItemDto dto) {
         if (BooleanUtils.isNotTrue(dto.getAvailable()) || StringUtils.isBlank(dto.getName()) ||
                 StringUtils.isBlank(dto.getDescription())) {
-            throw new ItemServiceException("недопустимые свойства вещи");
+            throw new ItemServiceException("invalid properties of a thing");
         }
         Item item = itemMapper.toItem(dto);
         item.setOwner(userId);
@@ -132,13 +132,13 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> bookings = bookingRepository.findByItemIdAndBookerId(itemId, authorId).stream()
                 .filter(booking -> booking.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());
         if (bookings.isEmpty()) {
-            throw new CommentServiceException("отзыв на эту вещь добавить невозможно");
+            throw new CommentServiceException("it is impossible to add a review for this thing");
         }
         Comment comment = commentMapper.toComment(dto);
         comment.setItem(itemRepository.getById(itemId));
         comment.setAuthor(userRepository.getById(authorId));
         commentRepository.save(comment);
-        log.info("Комментарий добавлен: {}", comment.toString());
+        log.info("ItemServiceImpl.createComment() {}", comment.toString());
         return commentMapper.toDto(comment);
     }
 }

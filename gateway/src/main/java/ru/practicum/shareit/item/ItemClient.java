@@ -12,16 +12,16 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Map;
+import static ru.practicum.shareit.utils.Consts.API_PREFIX_ITEM;
 
 @Service
 public class ItemClient extends BaseClient {
-    private static final String API_PREFIX = "/items";
 
     @Autowired
     public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory((serverUrl + API_PREFIX)))
+                        .uriTemplateHandler(new DefaultUriBuilderFactory((serverUrl + API_PREFIX_ITEM)))
                         .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                         .build()
         );

@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.model.*;
 
+import static ru.practicum.shareit.utils.Consts.TIME_PATTERN_WITH_MILLISECONDS;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -27,6 +29,6 @@ public class Comment {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SS")
+    @JsonFormat(pattern = TIME_PATTERN_WITH_MILLISECONDS)
     private LocalDateTime created;
 }

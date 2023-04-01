@@ -3,15 +3,11 @@ package ru.practicum.shareit.commonclasses;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.booking.exception.BookingServiceException;
-import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.exception.CommentServiceException;
 import ru.practicum.shareit.item.exception.ItemRepositoryException;
 import ru.practicum.shareit.item.exception.ItemServiceException;
-import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.request.exception.ItemRequestServiceException;
-import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.exception.UserRepositoryException;
 import ru.practicum.shareit.user.exception.UserServiceException;
 import org.springframework.http.HttpStatus;
@@ -25,8 +21,7 @@ import java.util.Map;
 
 
 @Slf4j
-@ControllerAdvice(assignableTypes = {ItemController.class, UserController.class, BookingController.class,
-        ItemRequestController.class})
+@ControllerAdvice
 class ErrorHandler {
 
     @ExceptionHandler(UserRepositoryException.class)
@@ -65,9 +60,9 @@ class ErrorHandler {
     @ExceptionHandler(BookingServiceException.class)
     public ResponseEntity<String> bookingServiceHandler(final RuntimeException e) {
         log.debug(e.getMessage());
-        if (StringUtils.containsIgnoreCase(e.getMessage(), "данные не доступны") ||
-                StringUtils.containsIgnoreCase(e.getMessage(), "нет доступа для изменения статуса") ||
-                StringUtils.containsIgnoreCase(e.getMessage(), "бронирование своих вещей запрещено"
+        if (StringUtils.containsIgnoreCase(e.getMessage(), "data is not available") ||
+                StringUtils.containsIgnoreCase(e.getMessage(), "there is no access to change the status") ||
+                StringUtils.containsIgnoreCase(e.getMessage(), "booking your own things is prohibited"
                 )) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

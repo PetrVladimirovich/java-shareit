@@ -44,22 +44,22 @@ public class BookingServiceImpl implements BookingService {
         booking.setBooker(userRepository.getById(bookerId));
         booking.setItem(itemRepository.getById(dto.getItemId()));
         if (booking.getItem().getOwner().equals(bookerId)) {
-            throw new BookingServiceException("бронирование своих вещей запрещено");
+            throw new BookingServiceException("booking your own things is prohibited");
         }
         if (booking.getItem().getAvailable().equals(true)) {
             bookingRepository.save(booking);
-            log.info("Добавлена новая бронь: {}", booking.toString());
+            log.info("BookingServiceImpl.create() {}", booking.toString());
             return booking;
         }
-        throw new BookingServiceException("бронирование не доступно");
+        throw new BookingServiceException("booking is not available");
     }
 
     @Override
     public Booking updateStatus(Long ownerId, Long bookingId, Boolean status) {
         Booking booking = bookingRepository.findByIdAndItemOwner(bookingId, ownerId)
-                .orElseThrow(() -> new BookingServiceException("нет доступа для изменения статуса"));
+                .orElseThrow(() -> new BookingServiceException("there is no access to change the status"));
         if (booking.getStatus() == ItemStatus.APPROVED) {
-            throw new BookingServiceException("статус утверждено, изменение запрещено");
+            throw new BookingServiceException("status approved, modification prohibited");
         }
         if (status.equals(true)) {
             booking.setStatus(ItemStatus.APPROVED);
@@ -67,7 +67,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(ItemStatus.REJECTED);
         }
         bookingRepository.save(booking);
-        log.info("Обновление статуса бронирования: {}", booking.toString());
+        log.info("BookingServiceImpl.updateStatus() {}", booking.toString());
         return booking;
     }
 
@@ -76,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository
                 .findByIdAndBookerIdAndItemOwner(bookingId, userId)
                 .orElseGet(() -> {
-                    throw new BookingServiceException("данные не доступны");
+                    throw new BookingServiceException("data is not available");
                 });
     }
 

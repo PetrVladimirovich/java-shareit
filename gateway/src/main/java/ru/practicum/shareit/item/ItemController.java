@@ -14,24 +14,25 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
+import static ru.practicum.shareit.utils.Consts.REQUESTOR_ID_TAG;
+
 @Controller
 @RequestMapping("/items")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
 public class ItemController {
-    public static final String USER_ID_TAG = "X-Sharer-User-Id";
     private final ItemClient itemClient;
 
     @PostMapping
-    public ResponseEntity<Object> createItem(@RequestHeader(USER_ID_TAG) @NotNull Long userId,
+    public ResponseEntity<Object> createItem(@RequestHeader(REQUESTOR_ID_TAG) @NotNull Long userId,
                                              @RequestBody @NotNull ItemDto dto) {
         log.info("ItemController : POST /items");
         return itemClient.createItem(userId, dto);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateItem(@RequestHeader(USER_ID_TAG) @NotNull Long userId,
+    public ResponseEntity<Object> updateItem(@RequestHeader(REQUESTOR_ID_TAG) @NotNull Long userId,
                                              @PathVariable("id") Long itemId,
                                              @RequestBody @NotNull ItemDto dto) {
         log.info("ItemController : PATCH /items/{}", itemId);
@@ -39,14 +40,14 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getItem(@RequestHeader(USER_ID_TAG) Long userId,
+    public ResponseEntity<Object> getItem(@RequestHeader(REQUESTOR_ID_TAG) Long userId,
                                           @PathVariable("id") Long itemId) {
         log.info("ItemController : GET /items/{}", itemId);
         return itemClient.getItem(itemId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItems(@RequestHeader(USER_ID_TAG) @NotNull Long userId,
+    public ResponseEntity<Object> getItems(@RequestHeader(REQUESTOR_ID_TAG) @NotNull Long userId,
                                            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
                                            @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         log.info("ItemController : GET /items/{}", userId);
@@ -62,7 +63,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> createComment(@RequestHeader(USER_ID_TAG) @NotNull Long authorId,
+    public ResponseEntity<Object> createComment(@RequestHeader(REQUESTOR_ID_TAG) @NotNull Long authorId,
                                                 @PathVariable("itemId") Long itemId,
                                                 @RequestBody @NotNull @Valid CommentDto dto) {
         log.info("ItemController : POST /items/{}/comment", itemId);

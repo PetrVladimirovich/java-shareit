@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.practicum.shareit.request.ItemRequestController.REQUESTOR_ID_TAG;
+import static ru.practicum.shareit.utils.Consts.REQUESTOR_ID_TAG;
 
 @WebMvcTest(controllers = ItemRequestController.class)
 class ItemRequestControllerIT {
